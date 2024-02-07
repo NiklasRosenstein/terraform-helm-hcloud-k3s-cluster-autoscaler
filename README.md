@@ -17,6 +17,7 @@ __Table of contents__
 * [Performance](#performance)
 * [Troubleshooting tips](#troubleshooting-tips)
   * [Inspect the generated cloud-init](#inspect-the-generated-cloud-init)
+  * [The scale test deployments don't differentiate between architectures](#the-scale-test-deployments-dont-differentiate-between-architectures)
 * [Development](#development)
 * [Documentation](#documentation)
   * [Requirements](#requirements)
@@ -79,6 +80,11 @@ Example:
 ```
 $ terraform output -json cluster-autoscaler | jq '.hcloud_cluster_config.nodeConfigs."my-nodepool".cloudInit' -r
 ```
+
+### The scale test deployments don't differentiate between architectures
+
+Only the `labels` specified in the node pool configuration are passed into the test Deployments. You can simply
+add the `kubernetes.io/arch` label explicitly and set the value to `amd64` or `arm64`, respectively.
 
 ## Development
 
