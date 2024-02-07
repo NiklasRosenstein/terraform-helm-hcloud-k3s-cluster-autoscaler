@@ -1,4 +1,4 @@
-# cluster-autoscaler for Hetzner Cloud
+# Cluster Autoscaler for K3s on Hetzner Cloud
 
 This Terraform module deploys a [kubernetes/autoscaler](https://github.com/kubernetes/autoscaler) for use with a K3s cluster running in Hetzner cloud. The module is tested with a cluster created via [hetzner-k3s](https://github.com/vitobotta/hetzner-k3s), which as of the time of writing does not support labels/taints for node pools (see [#317](https://github.com/vitobotta/hetzner-k3s/issues/317)), but will likely work with other K3s clusters as well.
 
