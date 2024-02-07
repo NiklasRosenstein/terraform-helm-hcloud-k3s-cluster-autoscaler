@@ -18,6 +18,7 @@ __Table of contents__
 * [Troubleshooting tips](#troubleshooting-tips)
   * [Inspect the generated cloud-init](#inspect-the-generated-cloud-init)
   * [The scale test deployments don't differentiate between architectures](#the-scale-test-deployments-dont-differentiate-between-architectures)
+  * [Modifying labels/taints on a node pool](#modifying-labelstaints-on-a-node-pool)
 * [Development](#development)
 * [Documentation](#documentation)
   * [Requirements](#requirements)
@@ -86,6 +87,11 @@ $ terraform output -json cluster-autoscaler | jq '.hcloud_cluster_config.nodeCon
 Only the `labels` specified in the node pool configuration are passed into the test Deployments. You can simply
 add the `kubernetes.io/arch` label explicitly and set the value to `amd64` or `arm64`, respectively.
 
+### Modifying labels/taints on a node pool
+
+The cluster autoscaler may need to be restarted after the last node with the old labels/taints has been removed
+from the cluster to allow it to scale up new nodes with the new labels/taints.
+
 ## Development
 
 Install [pre-commit](https://pre-commit.com/) as well as the following tools to complete the checks:
@@ -148,4 +154,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_hcloud_cluster_config"></a> [hcloud\_cluster\_config](#output\_hcloud\_cluster\_config) | n/a |
+| <a name="output_node_pool_labels"></a> [node\_pool\_labels](#output\_node\_pool\_labels) | n/a |
+| <a name="output_node_pool_taints"></a> [node\_pool\_taints](#output\_node\_pool\_taints) | n/a |
+| <a name="output_node_pools"></a> [node\_pools](#output\_node\_pools) | n/a |
 <!-- end runcmd -->
