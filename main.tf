@@ -34,10 +34,6 @@ locals {
   }
 }
 
-output "hcloud_cluster_config" {
-  value = local.hcloud_cluster_config
-}
-
 resource "helm_release" "cluster-autoscaler" {
   namespace        = var.namespace
   create_namespace = var.create_namespace
