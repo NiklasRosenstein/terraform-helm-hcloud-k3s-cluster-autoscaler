@@ -1,0 +1,13 @@
+repos:
+- repo: local
+  hooks:
+    - id: mksync
+      name: mksync
+      entry: mksync -i
+      language: system
+      files: README.md
+    - id: terraform-fmt
+      name: terraform-fmt
+      entry: terraform fmt
+      language: system
+      files: \.*tf

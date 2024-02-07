@@ -1,0 +1,41 @@
+#cloud-config
+
+preserve_hostname: true
+packages: ["fail2ban", "wireguard"]
+
+write_files:
+- path: /etc/ssh/sshd_config.d/ssh.conf
+  content: |
+    ${indent(4, sshd_config)}
+
+runcmd:
+- hostnamectl set-hostname $(curl http://169.254.169.254/hetzner/v1/metadata/hostname)
+- update-crypto-policies --set DEFAULT:SHA1 || true
+- |
+    touch /etc/initialized
+
+    if [[ $(< /etc/initialized) != "true" ]]; then
+      systemctl restart NetworkManager || true
+      dhclient eth1 -v || true
+    fi
+
+    HOSTNAME=$(hostname -f)
+    PRIVATE_IP=$(ip route get ${private_network_gateway_ip} | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
+    PUBLIC_IP=$(hostname -I | awk '{print $1}')
+    NETWORK_INTERFACE=$(ip route get ${private_network_gateway_ip} | awk -F"dev " 'NR==1{split($2,a," ");print a[1]}')
+
+    curl -sfL "${k3s_installer_url}" | K3S_TOKEN="${k3s_token}" INSTALL_K3S_VERSION="${k3s_version}" K3S_URL="${k3s_url}" INSTALL_K3S_EXEC="agent \
+    --node-name=$HOSTNAME \
+    %{~ for label in node_labels ~}
+    --node-label "${label}" \
+    %{~ endfor ~}
+    %{~ for taint in node_taints ~}
+    --node-taint "${taint}" \
+    %{~ endfor ~}
+    --kubelet-arg="cloud-provider=external" \
+    --node-ip=$PRIVATE_IP \
+    --node-external-ip=$PUBLIC_IP \
+    --flannel-iface=$NETWORK_INTERFACE" sh -
+
+    systemctl enable --now k3s-agent
+    echo true > /etc/initialized
