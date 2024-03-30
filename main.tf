@@ -56,6 +56,7 @@ resource "helm_release" "cluster-autoscaler" {
       "repository" = var.image_repository
       "tag"        = var.image_tag
     }
+    "extraArgs" : var.extra_args,
     "extraEnv" = {
       "HCLOUD_TOKEN"          = var.hcloud_token
       "HCLOUD_CLUSTER_CONFIG" = base64encode(jsonencode(local.hcloud_cluster_config))

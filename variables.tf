@@ -131,3 +131,13 @@ variable "install_scale_test_deployments" {
   description = "Whether to install a `Deployment` for each node pool that can be used to test scaling it."
   default     = false
 }
+
+variable "extra_args" {
+  type        = map(string)
+  description = <<EOF
+    Extra arguments to pass to the `cluster-autoscaler` command.
+    See https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-the-parameters-to-ca
+    for a list of available parameters.
+  EOF
+  default     = {}
+}
